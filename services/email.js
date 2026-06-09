@@ -11,14 +11,13 @@ const MATERIAL_NAMES = {
 };
 
 function createTransporter() {
-  const port = parseInt(process.env.SMTP_PORT || '587');
+  const port = parseInt(process.env.SMTP_PORT || '465');
   const secure = port === 465;
   console.log(`[SMTP] host=${process.env.SMTP_HOST} port=${port} secure=${secure} user=${process.env.SMTP_USER} pass=${process.env.SMTP_PASS ? 'set' : 'MISSING'}`);
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port,
     secure,
-    requireTLS: !secure,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
