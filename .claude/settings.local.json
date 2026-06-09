@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(Get-ChildItem -Recurse \"C:\\\\Users\\\\Roder\\\\skmetals-planning\" | Where-Object { -not $_.PSIsContainer } | Select-Object @{n='Pad';e={$_.FullName.Replace\\('C:\\\\Users\\\\Roder\\\\skmetals-planning\\\\',''\\)}} , @{n='Bytes';e={$_.Length}} | Format-Table -AutoSize)",
+      "PowerShell(& \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" --version)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Roder\\\\skmetals-planning\\\\public\" -Recurse | Select-Object @{n='Pad';e={$_.FullName.Replace\\('C:\\\\Users\\\\Roder\\\\skmetals-planning\\\\public\\\\',''\\)}} | Format-Table -AutoSize)",
+      "WebFetch(domain:www.skmetals.de)",
+      "WebSearch",
+      "WebFetch(domain:webcache.googleusercontent.com)",
+      "PowerShell(git init *)"
+    ]
+  }
+}

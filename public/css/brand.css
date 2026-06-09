@@ -1,0 +1,71 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SK METALS – HUISSTIJL VARIABELEN
+   ───────────────────────────────────────────────────────────────────
+   Dit is het enige bestand dat u hoeft aan te passen voor de
+   huisstijl. Alle andere CSS-bestanden verwijzen hiernaar.
+   ═══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root {
+
+  /* ── Primaire kleur (header, sidebar, tabelkoppen, modale headers) ──
+     Donker marineblauw – uit het SK Metals logo                       */
+  --brand-primary:        #1a3060;
+  --brand-primary-light:  #263d7a;
+
+  /* ── Accentkleur (actie-knoppen, highlights, focus-randen) ──
+     Staalsblauw – uit het SK Metals logo                              */
+  --brand-accent:         #47b8d4;
+  --brand-accent-hover:   #3a9dba;
+
+  /* ─── Afgeleide accentkleuren (automatisch, niet aanpassen) ───────*/
+  --brand-accent-glow:    rgba(71, 184, 212, 0.15);   /* focus-ring inputs */
+  --brand-accent-shadow:  rgba(71, 184, 212, 0.30);   /* knop-schaduw       */
+
+  /* ── Achtergrond & tekst ── */
+  --brand-bg:             #f0f2f5;
+  --brand-white:          #ffffff;
+  --brand-text:           #1a2340;
+  --brand-text-light:     #5a6070;
+  --brand-border:         #d8dce6;
+
+  /* ── Statuskleuren ── */
+  --brand-success:        #2eaa5e;
+  --brand-warning:        #d4870a;
+  --brand-danger:         #d63c2f;
+
+  /* ── Typografie ── */
+  --brand-font:           'Open Sans', Arial, sans-serif;
+
+  /* ── Hoekradius ── */
+  --brand-radius:         7px;
+
+  /* ── Schaduw ── */
+  --brand-shadow:         0 2px 12px rgba(0, 0, 0, 0.08);
+  --brand-shadow-lg:      0 8px 32px rgba(0, 0, 0, 0.12);
+
+  /* ── Logo ──────────────────────────────────────────────────────────
+     --logo-height    : hoogte van het logo in de header en sidebar
+     --logo-filter    : CSS filter op donkere achtergrond (header/sidebar)
+       → 'none'                     als het logo al licht/wit is
+       → 'brightness(0) invert(1)'  om een donker logo wit te maken    */
+  --logo-height:          44px;
+  --logo-filter:          none;
+  --logo-bg:              white;
+  --logo-padding:         4px 8px;
+  --logo-border-radius:   5px;
+
+  /* ── Materiaaltype kleuren (boekingschips & legenda) ── */
+  --brand-c-emotoren:     #3498db;
+  --brand-c-kabels:       #e67e22;
+  --brand-c-compressoren: #27ae60;
+  --brand-c-rest:         #7f8c8d;
+
+  /* ── Statusbadge kleuren ── */
+  --brand-s-confirmed:    #3498db;
+  --brand-s-arrived:      #9b59b6;
+  --brand-s-completed:    #27ae60;
+  --brand-s-noshow:       #e74c3c;
+  --brand-s-cancelled:    #95a5a6;
+}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SK Metals – Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <img src="/logo.jpg" alt="SK Metals" class="sidebar-logo-img">
+        <small>Beheer Dashboard</small>
+      </div>
+      <div class="sidebar-nav">
+        <div class="sidebar-section-title">Navigatie</div>
+        <a class="active" data-page="week" onclick="showPage('week')">
+          <span class="nav-icon">📅</span> <span>Weekoverzicht</span>
+        </a>
+        <a data-page="day" onclick="showPage('day')">
+          <span class="nav-icon">📋</span> <span>Dagoverzicht</span>
+        </a>
+        <div class="sidebar-section-title">Beheer</div>
+        <a onclick="openAddModal()">
+          <span class="nav-icon">➕</span> <span>Boeking toevoegen</span>
+        </a>
+        <a onclick="openLimitsModal()">
+          <span class="nav-icon">⚙️</span> <span>Capaciteit</span>
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="logout()">
+          <span>⬅</span> <span>Uitloggen</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ── WEEK PAGE ── -->
+      <div id="page-week" class="page active">
+        <div class="topbar">
+          <span class="topbar-title">Weekoverzicht</span>
+          <div class="topbar-actions">
+            <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Boeking toevoegen</button>
+          </div>
+        </div>
+        <div style="padding:28px">
+          <div class="legend">
+            <div class="legend-item"><div class="legend-dot e-motoren"></div> E-motoren</div>
+            <div class="legend-item"><div class="legend-dot kabels"></div> Kabels</div>
+            <div class="legend-item"><div class="legend-dot compressoren"></div> Compressoren</div>
+            <div class="legend-item"><div class="legend-dot rest"></div> Restmateriaal</div>
+            <div class="legend-item" style="margin-left:auto">
+              <span style="font-size:11px;color:#aaa">&#9733; = prioriteit &nbsp; W = walk-in</span>
+            </div>
+          </div>
+
+          <div class="week-nav">
+            <button class="btn btn-outline btn-sm" onclick="prevWeek()">&#8592; Vorige week</button>
+            <span class="week-label" id="week-label">—</span>
+            <button class="btn btn-outline btn-sm" onclick="nextWeek()">Volgende week &#8594;</button>
+            <button class="btn btn-outline btn-sm" onclick="gotoToday()">Vandaag</button>
+          </div>
+
+          <div class="week-table-wrap">
+            <table class="week-table" id="week-table">
+              <thead>
+                <tr>
+                  <th>Tijdslot</th>
+                  <th id="th-0"></th>
+                  <th id="th-1"></th>
+                  <th id="th-2"></th>
+                  <th id="th-3"></th>
+                  <th id="th-4"></th>
+                </tr>
+              </thead>
+              <tbody id="week-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DAY PAGE ── -->
+      <div id="page-day" class="page">
+        <div class="topbar">
+          <span class="topbar-title">Dagoverzicht</span>
+          <div class="topbar-actions">
+            <div class="date-nav">
+              <input type="date" id="day-date-picker" onchange="loadDay(this.value)">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Boeking toevoegen</button>
+          </div>
+        </div>
+        <div style="padding:28px">
+          <div class="stats-grid" id="day-stats"></div>
+          <div class="day-slots" id="day-slots">
+            <p style="color:#aaa;text-align:center;padding:40px">Selecteer een datum om de planning te bekijken.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
+
+  <!-- ── MODAL: Boeking toevoegen ── -->
+  <div class="modal-overlay" id="modal-add">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Boeking toevoegen</h3>
+        <button class="modal-close" onclick="closeModal('modal-add')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-booking-form" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label>Bedrijfsnaam *</label>
+              <input type="text" name="company_name" required placeholder="Bedrijfsnaam">
+            </div>
+            <div class="field">
+              <label>Contactpersoon *</label>
+              <input type="text" name="contact_person" required placeholder="Naam">
+            </div>
+            <div class="field">
+              <label>E-mailadres *</label>
+              <input type="email" name="email" required placeholder="email@bedrijf.nl">
+            </div>
+            <div class="field">
+              <label>Telefoonnummer *</label>
+              <input type="tel" name="phone" required placeholder="+31 6 ...">
+            </div>
+            <div class="field">
+              <label>Kenteken *</label>
+              <input type="text" name="license_plate" required placeholder="AB-123-CD" style="text-transform:uppercase">
+            </div>
+            <div class="field">
+              <label>Materiaaltype *</label>
+              <select name="material_type" required>
+                <option value="">— Selecteer —</option>
+                <option value="e-motoren">E-motoren</option>
+                <option value="kabels">Kabels</option>
+                <option value="compressoren">Compressoren</option>
+                <option value="rest">Restmateriaal</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Datum *</label>
+              <input type="date" name="desired_date" required>
+            </div>
+            <div class="field">
+              <label>Tijdslot (optioneel – anders automatisch)</label>
+              <select name="slot_index">
+                <option value="">Automatisch toewijzen</option>
+                <option value="0">07:00 - 09:00</option>
+                <option value="1">09:00 - 11:00</option>
+                <option value="2">11:00 - 13:00</option>
+                <option value="3">13:00 - 15:00</option>
+                <option value="4">15:00 - 17:00</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label>Opmerking</label>
+              <textarea name="notes" placeholder="Optionele opmerkingen..."></textarea>
+            </div>
+            <div class="field full" style="flex-direction:row;flex-wrap:wrap;gap:20px">
+              <label class="checkbox-row">
+                <input type="checkbox" name="is_walkin"> Walk-in
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" name="is_priority"> Prioriteit &#9733;
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" name="send_email" checked> Bevestigingsmail sturen
+              </label>
+            </div>
+          </div>
+          <div id="add-booking-error" class="alert alert-error" style="display:none;margin-top:12px"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-add')">Annuleren</button>
+        <button class="btn btn-primary" onclick="submitAddBooking()" id="add-booking-btn">Boeking toevoegen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: Capaciteitslimieten ── -->
+  <div class="modal-overlay" id="modal-limits">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Capaciteitslimieten instellen</h3>
+        <button class="modal-close" onclick="closeModal('modal-limits')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px;color:#666;margin-bottom:20px">
+          Stel in hoeveel voertuigen per type en totaal per tijdslot (2 uur) kunnen worden ingepland.
+        </p>
+        <div class="limits-grid">
+          <div class="limit-row">
+            <div class="limit-color" style="background:#3498db"></div>
+            <span class="limit-label">E-motoren</span>
+            <span style="font-size:12px;color:#888">per slot max:</span>
+            <input type="number" class="limit-input" id="limit-e-motoren" min="0" max="20">
+          </div>
+          <div class="limit-row">
+            <div class="limit-color" style="background:#e67e22"></div>
+            <span class="limit-label">Kabels</span>
+            <span style="font-size:12px;color:#888">per slot max:</span>
+            <input type="number" class="limit-input" id="limit-kabels" min="0" max="20">
+          </div>
+          <div class="limit-row">
+            <div class="limit-color" style="background:#27ae60"></div>
+            <span class="limit-label">Compressoren</span>
+            <span style="font-size:12px;color:#888">per slot max:</span>
+            <input type="number" class="limit-input" id="limit-compressoren" min="0" max="20">
+          </div>
+          <div class="limit-row">
+            <div class="limit-color" style="background:#7f8c8d"></div>
+            <span class="limit-label">Restmateriaal</span>
+            <span style="font-size:12px;color:#888">per slot max:</span>
+            <input type="number" class="limit-input" id="limit-rest" min="0" max="20">
+          </div>
+          <div class="limit-row" style="background:#fff8e1;border:1px solid #ffcc02">
+            <div class="limit-color" style="background:#e63946"></div>
+            <span class="limit-label" style="font-weight:700">Totaal per slot</span>
+            <span style="font-size:12px;color:#888">max wagens:</span>
+            <input type="number" class="limit-input" id="limit-total" min="1" max="50" style="border-color:#e63946">
+          </div>
+        </div>
+        <div id="limits-error" class="alert alert-error" style="display:none;margin-top:12px"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-limits')">Annuleren</button>
+        <button class="btn btn-primary" onclick="saveLimits()">Opslaan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: Boeking detail ── -->
+  <div class="modal-overlay" id="modal-detail">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="detail-title">Boeking details</h3>
+        <button class="modal-close" onclick="closeModal('modal-detail')">&times;</button>
+      </div>
+      <div class="modal-body" id="detail-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modal-detail')">Sluiten</button>
+        <button class="btn btn-danger btn-sm" id="detail-cancel-btn" onclick="cancelBookingFromDetail()">Annuleren</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

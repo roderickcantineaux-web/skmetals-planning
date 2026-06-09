@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SK Metals – Admin Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Open Sans', Arial, sans-serif;
+      background: #1a3060;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .login-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .login-header {
+      background: #1a3060;
+      padding: 28px 32px 24px;
+      text-align: center;
+    }
+    .login-header img { height: 56px; width: auto; object-fit: contain; background: white; border-radius: 6px; padding: 6px 10px; }
+    .login-header small { display: block; color: #7a9cc0; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 10px; }
+    .login-body { padding: 32px; }
+    .login-body h2 { font-size: 16px; font-weight: 700; color: #1a3060; margin-bottom: 6px; }
+    .login-body p { font-size: 13px; color: #888; margin-bottom: 24px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+    .field label { font-size: 12px; font-weight: 600; color: #555; }
+    .field input {
+      padding: 10px 12px;
+      border: 1.5px solid #d8dce6;
+      border-radius: 5px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { outline: none; border-color: #47b8d4; box-shadow: 0 0 0 3px rgba(71,184,212,0.15); }
+    .btn-login {
+      width: 100%;
+      padding: 11px;
+      background: #47b8d4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .btn-login:hover { background: #3a9dba; }
+    .error-msg {
+      background: #fdedec;
+      color: #922b21;
+      border: 1px solid #f5b7b1;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-header">
+      <img src="/logo.jpg" alt="SK Metals">
+      <small>Beheer Portaal</small>
+    </div>
+    <div class="login-body">
+      <h2>Inloggen</h2>
+      <p>Voer het admin wachtwoord in om toegang te krijgen.</p>
+      <div class="error-msg" id="error-msg">Onjuist wachtwoord. Probeer het opnieuw.</div>
+      <form id="login-form">
+        <div class="field">
+          <label for="password">Wachtwoord</label>
+          <input type="password" id="password" name="password" autofocus autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn-login">Inloggen →</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('error-msg');
+      errorMsg.style.display = 'none';
+      btn.textContent = 'Even wachten...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        if (res.ok) {
+          window.location.href = '/admin';
+        } else {
+          errorMsg.style.display = 'block';
+          btn.textContent = 'Inloggen →';
+          btn.disabled = false;
+          document.getElementById('password').focus();
+          document.getElementById('password').select();
+        }
+      } catch {
+        errorMsg.textContent = 'Verbindingsfout. Probeer het opnieuw.';
+        errorMsg.style.display = 'block';
+        btn.textContent = 'Inloggen →';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

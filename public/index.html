@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SK Metals – Losplanning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <img src="/logo.jpg" alt="SK Metals" class="header-logo">
+      <p class="header-subtitle">Losplanning Portaal</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- Boekingsformulier -->
+      <div class="form-card" id="booking-form-container">
+        <h2>Tijdslot reserveren</h2>
+        <p class="form-intro">
+          Vul onderstaand formulier in om een losafspraak te plannen bij SK Metals in Kleve.
+          Na uw boeking ontvangt u een bevestigingsmail met alle details.
+        </p>
+
+        <form id="booking-form" novalidate>
+          <div class="form-section">
+            <h3>Bedrijfsgegevens</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="company_name">Bedrijfsnaam <span class="req">*</span></label>
+                <input type="text" id="company_name" name="company_name" required placeholder="Uw bedrijfsnaam" autocomplete="organization">
+              </div>
+              <div class="form-group">
+                <label for="contact_person">Contactpersoon <span class="req">*</span></label>
+                <input type="text" id="contact_person" name="contact_person" required placeholder="Voor- en achternaam" autocomplete="name">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">E-mailadres <span class="req">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="email@bedrijf.nl" autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="phone">Telefoonnummer <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" required placeholder="+31 6 12345678" autocomplete="tel">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Transportgegevens</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="license_plate">Kenteken <span class="req">*</span></label>
+                <input type="text" id="license_plate" name="license_plate" required placeholder="AB-123-CD"
+                  style="text-transform:uppercase;letter-spacing:2px;font-weight:600">
+              </div>
+              <div class="form-group">
+                <label for="material_type">Materiaaltype <span class="req">*</span></label>
+                <select id="material_type" name="material_type" required>
+                  <option value="">— Selecteer type —</option>
+                  <option value="e-motoren">E-motoren</option>
+                  <option value="kabels">Kabels</option>
+                  <option value="compressoren">Compressoren</option>
+                  <option value="rest">Restmateriaal</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Datum &amp; tijdslot</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="desired_date">Datum <span class="req">*</span></label>
+                <input type="date" id="desired_date" name="desired_date" required>
+              </div>
+            </div>
+
+            <!-- Slot-kiezer: verschijnt zodra datum én materiaaltype zijn gekozen -->
+            <div id="slot-picker-msg" class="slot-preview hidden" aria-live="polite"></div>
+
+            <div id="slot-picker-container" class="hidden" aria-live="polite">
+              <div class="slot-picker-header">
+                <span class="slot-picker-label">Kies een tijdslot <span class="req">*</span></span>
+                <span id="slot-picker-date-label" class="slot-picker-date-label"></span>
+              </div>
+              <div id="slot-picker" class="slot-picker"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-group">
+              <label for="notes">Opmerking</label>
+              <textarea id="notes" name="notes" rows="3" placeholder="Eventuele bijzonderheden (bijv. aantal pallets, bijzonder formaat, etc.)"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submit-btn">
+              Tijdslot reserveren
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Bevestigingsscherm -->
+      <div class="confirmation-card hidden" id="confirmation-card">
+        <div class="confirmation-icon">✓</div>
+        <h2>Boeking bevestigd!</h2>
+        <p>Uw losafspraak is vastgelegd. Een bevestigingsmail is onderweg naar uw e-mailadres.</p>
+        <div class="confirmation-details" id="confirmation-details"></div>
+        <div id="alt-notice" class="alt-notice hidden"></div>
+        <button class="btn btn-secondary" onclick="resetForm()">Nieuwe boeking aanmaken</button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>SK Metals GmbH &nbsp;|&nbsp; Ziegelstrasse 64, 47533 Kleve, Duitsland</p>
+  </footer>
+
+  <div id="toast" class="hidden"></div>
+
+  <script src="/js/booking.js"></script>
+</body>
+</html>
