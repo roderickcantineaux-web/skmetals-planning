@@ -8,7 +8,7 @@ const adminRoutes = require('./routes/admin');
 const { startReminderCron } = require('./services/reminders');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // Railway stelt PORT in via env; 3000 is alleen voor lokaal
 
 initDatabase();
 
