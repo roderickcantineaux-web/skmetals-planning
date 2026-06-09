@@ -115,18 +115,16 @@ router.post('/bookings', async (req, res) => {
 
   const booking = db.prepare('SELECT * FROM bookings WHERE id = ?').get(bookingId);
 
-  try {
-    await sendBookingConfirmation(booking);
-  } catch (err) {
-    console.error('[Email FOUT] Bevestiging niet verstuurd:', err.message);
-  }
-
   res.json({
     success: true,
     booking_id: bookingId,
     booking_date: bookingDate,
     slot_time: bookingSlot.label,
   });
+
+  sendBookingConfirmation(booking).catch(err =>
+    console.error('[Email FOUT] Bevestiging niet verstuurd:', err.message)
+  );
 });
 
 module.exports = router;
