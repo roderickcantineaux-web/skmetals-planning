@@ -10,7 +10,12 @@ const { startReminderCron } = require('./services/reminders');
 const app = express();
 const PORT = process.env.PORT || 3000; // Railway stelt PORT in via env; 3000 is alleen voor lokaal
 
-initDatabase();
+try {
+  initDatabase();
+} catch (err) {
+  console.error('[FATAL] Database initialisatie mislukt:', err);
+  process.exit(1);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
