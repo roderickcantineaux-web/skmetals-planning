@@ -13,6 +13,7 @@ const MATERIAL_NAMES = {
 function createTransporter() {
   const port = parseInt(process.env.SMTP_PORT || '587');
   const secure = port === 465;
+  console.log(`[SMTP] host=${process.env.SMTP_HOST} port=${port} secure=${secure} user=${process.env.SMTP_USER} pass=${process.env.SMTP_PASS ? 'set' : 'MISSING'}`);
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port,
@@ -22,6 +23,8 @@ function createTransporter() {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
+    logger: true,
+    debug: true,
   });
 }
 
@@ -112,12 +115,14 @@ async function sendBookingConfirmation(booking) {
     <p style="color:#333;font-size:14px;margin-top:24px;">Met vriendelijke groet,<br><strong>SK Metals Team</strong></p>
   `;
 
-  await transporter.sendMail({
+  console.log(`[SMTP] Bevestiging versturen naar ${booking.email} voor boeking #${booking.id}`);
+  const info = await transporter.sendMail({
     from: `"SK Metals" <${process.env.FROM_EMAIL}>`,
     to: booking.email,
     subject: `Bevestiging boeking #${booking.id} – ${formatDate(booking.booking_date)} ${booking.slot_time}`,
     html: baseLayout('Boekingsbevestiging', content),
   });
+  console.log(`[SMTP] Bevestiging verstuurd: messageId=${info.messageId} response=${info.response}`);
 }
 
 async function sendReminder(booking) {
@@ -156,12 +161,14 @@ async function sendReminder(booking) {
     <p style="color:#333;font-size:14px;margin-top:24px;">Tot morgen!<br><strong>SK Metals Team</strong></p>
   `;
 
-  await transporter.sendMail({
+  console.log(`[SMTP] Herinnering versturen naar ${booking.email} voor boeking #${booking.id}`);
+  const info = await transporter.sendMail({
     from: `"SK Metals" <${process.env.FROM_EMAIL}>`,
     to: booking.email,
     subject: `Herinnering: losafspraak morgen ${formatDate(booking.booking_date)} – ${booking.slot_time}`,
     html: baseLayout('Herinnering losafspraak', content),
   });
+  console.log(`[SMTP] Herinnering verstuurd: messageId=${info.messageId} response=${info.response}`);
 }
 
 module.exports = { sendBookingConfirmation, sendReminder, formatDate };
